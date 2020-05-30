@@ -34,7 +34,7 @@ def do(Authorization, userId):
             'Content-Length': '37',
             'Pragma': 'no-cache',
             'Cache-Control': 'no-cache',
-            'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHBpcmVUaW1lIjoxNTg4ODYwNjc4NzM0LCJ1c2VyQ29kZSI6MzczMzYwMywiYWNjb3VudCI6IjE3NjM1NzI2MDkzIiwiYWNjb3VudFR5cGUiOjF9. ',
+            'Authorization': Authorization,
             'Origin': 'http://sxzhdjkhd.sxdygbjy.gov.cn:8081',
             'User-Agent': 'Mozilla/5.0',
             'Content-Type': 'application/json',
