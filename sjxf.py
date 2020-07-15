@@ -9,6 +9,7 @@ def do(Authorization, userId):
         # 试听学习
         headers = {
             'Authorization': Authorization,
+            'sUserId': userId,
             'User-Agent': 'san jin xian feng/3.2.6 (iPhone; iOS 13.4.1; Scale/3.00)',
             'Content-Type': 'application/json',
             'Host': '221.204.170.88:8184',
@@ -92,6 +93,7 @@ def do(Authorization, userId):
             'Authorization': Authorization,
             'User-Agent': 'san jin xian feng/3.2.6 (iPhone; iOS 13.4.1; Scale/3.00)',
             'Accept-Language': 'zh-Hans-CN;q=1, ko-KR;q=0.9, en-US;q=0.8',
+            'sUserId': userId,
         }
         # 取消点赞
         articleList = \
@@ -117,6 +119,7 @@ def do(Authorization, userId):
             'User-Agent': 'okhttp/3.8.0',
             'Content-Type': 'application/json',
             'Host': '221.204.170.88:8184',
+            'sUserId': userId,
             'Connection': 'Keep-Alive',
             'Accept-Encoding': 'gzip'
         }
@@ -135,6 +138,7 @@ def do(Authorization, userId):
             'User-Agent': 'san jin xian feng/3.2.6 (iPhone; iOS 13.4.1; Scale/3.00)',
             'Content-Type': 'application/json',
             'Host': '221.204.170.88:8184',
+            'sUserId': userId,
             'Accept-Language': 'zh-Hans-CN;q=1, ko-KR;q=0.9, en-US;q=0.8',
             'Connection': 'Keep-Alive',
             'Accept-Encoding': 'gzip, deflate',
@@ -161,6 +165,8 @@ def do(Authorization, userId):
     # 阅读
     yd()
     yd()
+
+
 def login(username, password):
     url = 'http://221.204.170.88:8184/app/user/login'
     data = {"password": password, "deviceId": "5D2723AE-D386-48C3-AC49-586260EE7E79", "clientid": "236236",
@@ -178,7 +184,11 @@ def login(username, password):
     userInfo = json.loads(response.text)['data']
     info = json.loads(base64.b64decode(userInfo))
     return [info['jwtToken'], info['id']]
+
+
 def sjxx(username, password):
     JWT = login(username, password)
-    do(JWT[0], JWT[1])
-sjxx("yourUsername", "yourPassword")
+    do('Bearer ' + str(JWT[0]), str(JWT[1]))
+
+
+sjxx("username", "password")
