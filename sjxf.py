@@ -6,25 +6,23 @@ import base64
 
 def do(Authorization, userId):
     def stxx():
-        # 试听学习
+        url = "http://221.204.170.88:8184/app/businessScore"
+
+        payload = {'userId': userId,
+                   'time':'35000',
+                   'type': '2',
+                   'articleId':'6349496',
+                   'ifScore':'1'}
         headers = {
             'Authorization': Authorization,
             'sUserId': userId,
-            'User-Agent': 'san jin xian feng/3.2.6 (iPhone; iOS 13.4.1; Scale/3.00)',
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json; charset=utf-8',
             'Host': '221.204.170.88:8184',
-            'Accept-Language': 'zh-Hans-CN;q=1, ko-KR;q=0.9, en-US;q=0.8',
             'Connection': 'Keep-Alive',
-            'Accept-Encoding': 'gzip, deflate',
-            'Accept': '*/*'
+            'Accept-Encoding': 'gzip',
+            'User-Agent': 'okhttp/3.8.0'
         }
-        endtime = int(time.time())
-        starttime = endtime - 700
-        stData = {"appEndTime": endtime, "appStartTime": starttime, "type": "2", "time": "700", "articleId": "12"}
-        stRsponse = requests.post(
-            url='http://221.204.170.88:8184/app/personalCenter/articleTime?type=2&time=700&articleId=12&appStartTime=' + str(
-                starttime),
-            json=stData, headers=headers)
+        stRsponse = requests.post(url, headers=headers, json=payload)
         print("试听学习====================" + stRsponse.text)
 
     def dati(str):
@@ -133,24 +131,70 @@ def do(Authorization, userId):
         print(dzRsponse.text)
 
     def yd():
+        url = "http://221.204.170.88:8184/app/businessScore"
+
+        payload = {'userId': userId,
+                   'time':'35000',
+                   'type': '1',
+                   'articleId':'6349496',
+                   'ifScore':'1'
+                   }
+
         headers = {
             'Authorization': Authorization,
-            'User-Agent': 'san jin xian feng/3.2.6 (iPhone; iOS 13.4.1; Scale/3.00)',
-            'Content-Type': 'application/json',
-            'Host': '221.204.170.88:8184',
             'sUserId': userId,
-            'Accept-Language': 'zh-Hans-CN;q=1, ko-KR;q=0.9, en-US;q=0.8',
+            'Content-Type': 'application/json; charset=utf-8',
+            'Host': '221.204.170.88:8184',
             'Connection': 'Keep-Alive',
-            'Accept-Encoding': 'gzip, deflate',
-            'Accept': '*/*'
+            'Accept-Encoding': 'gzip',
+            'User-Agent': 'okhttp/3.8.0'
         }
-        endtime = int(time.time())
-        starttime = endtime - 60
-        stData = {"appEndTime": endtime, "appStartTime": starttime, "type": "1", "time": "60", "articleId": "4"}
-        stRsponse = requests.post(
-            url='http://221.204.170.88:8184/app/personalCenter/articleTime?type=2&time=60&articleId=12&appStartTime=' + str(
-                starttime), json=stData, headers=headers)
-        print(stRsponse.text)
+        stRsponse = requests.post( url, headers=headers, json=payload)
+        print("试听学习====================" + stRsponse.text)
+
+    # 积分明细
+    def jifen():
+        url = 'http://221.204.170.88:8184/app/home/totayScore'
+
+        payload = {'userId': userId,
+                   'type': '2'
+                   }
+        headers = {
+            'Pragma': 'no-cache',
+            'Cache-Control': 'no-cache',
+            'Authorization': Authorization,
+            'User-Agent': 'Mozilla/5.0 (Linux; Android 10; Redmi K20 Pro Premium Edition Build/QKQ1.190825.002; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/77.0.3865.120 MQQBrowser/6.2 TBS/045224 Mobile Safari/537.36',
+            'Content-Type': 'application/json',
+            'Origin': 'http: // sxzhdjkhd.sxdygbjy.gov.cn: 8081',
+            'Accept-Language': 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7',
+            'Connection': 'Keep-Alive',
+            'X-Requested-With': 'io.dcloud.H5B1841EE',
+            'Accept-Encoding': 'gzip, deflate',
+            'Accept': '*/*',
+            'Referer': 'http: // sxzhdjkhd.sxdygbjy.gov.cn: 8081 / zhdj - pre / index.html',
+            'Host': '221.204.170.88:8184',
+        }
+        s = requests.session()
+        t = s.post(url, headers=headers, data=json.dumps(payload))
+        todayScore = json.loads(t.text)
+        if str(todayScore['data']['todayScore']) < '15.0':
+            global desp
+            desp = '【分值不够，请手动刷分!】今天增加了' + str(todayScore['data']['todayScore']) + '分，总分为' + str(
+                todayScore['data']['yearScore']) + '分'
+            print(desp)
+            rizhi()
+        else:
+            desp = '今天增加了' + str(todayScore['data']['todayScore']) + '分，总分为' + str(
+                todayScore['data']['yearScore']) + '分'
+            print(desp)
+
+    # WXplusher
+    def rizhi():
+        url = "你的网站"         #到这申请https://qmsg.zendee.cn/
+        payload = {'msg': desp}
+        headers = {'Cookie': '__cfduid=dad6155270fd20b95dd6965bc30053a8b1600251183'}
+        response = requests.request("POST", url, headers=headers, data=payload)
+        print(response.text)
 
     # 答题
     dati("1")
@@ -165,12 +209,16 @@ def do(Authorization, userId):
     # 阅读
     yd()
     yd()
+    # 积分明细
+    time.sleep(10)
+    jifen()
+    # 日志提醒
 
 
 def login(username, password):
     url = 'http://221.204.170.88:8184/app/user/login'
-    data = {"password": password, "deviceId": "5D2723AE-D386-48C3-AC49-586260EE7E79", "clientid": "236236",
-            "userName": username}
+    data = {"password": password, "deviceId": "5D2723AE-D386-48C3-AC49-586260EE7E79", "clientid": "234234",
+            "userName": username,}
     headers = {
         'Content-Type': 'application/json',
         'Connection': 'keep-alive',
@@ -191,4 +239,9 @@ def sjxx(username, password):
     do('Bearer ' + str(JWT[0]), str(JWT[1]))
 
 
-sjxx("username", "password")
+if __name__ == '__main__':
+    sjxx("username", "password")  #  自己的账号  密码可以自己抓一下登录界面
+
+
+def main_handler(event, context):
+    return sjxx("username", "password")  # 自己的账号  密码可以自己抓一下登录界面
