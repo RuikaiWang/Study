@@ -11,7 +11,7 @@ def do(Authorization, userId):
         payload = {'userId': userId,
                    'time':'35000',
                    'type': '2',
-                   'articleId':'6349496',
+                   'articleId':'12',
                    'ifScore':'1'}
         headers = {
             'Authorization': Authorization,
@@ -94,14 +94,15 @@ def do(Authorization, userId):
             'sUserId': userId,
         }
         # 取消点赞
+        global articleList
         articleList = \
             json.loads(requests.get("http://221.204.170.88:8184/app/study/list_article/72?size=10&page=1").text)[
                 "data"]
-        unlovedata1 = {"type": "1", "userId": userId, "uniqueId": articleList[0]["id"]}
+        unlovedata1 = {"type": "1", "userId": userId, "uniqueId": articleList[2]["id"]}
         unlove1Response = requests.post("http://221.204.170.88:8184/app/loveCancelDelete", json=unlovedata1,
                                         headers=Headers)
         print(unlove1Response.text)
-        unlovedata2 = {"type": "1", "userId": userId, "uniqueId": articleList[1]["id"]}
+        unlovedata2 = {"type": "1", "userId": userId, "uniqueId": articleList[3]["id"]}
         unlove2Response = requests.post("http://221.204.170.88:8184/app/loveCancelDelete", json=unlovedata2,
                                         headers=Headers)
         print(unlove2Response.text)
@@ -136,7 +137,7 @@ def do(Authorization, userId):
         payload = {'userId': userId,
                    'time':'35000',
                    'type': '1',
-                   'articleId':'6349496',
+                   'articleId':articleList[3]["id"],
                    'ifScore':'1'
                    }
 
@@ -190,7 +191,7 @@ def do(Authorization, userId):
 
     # WXplusher
     def rizhi():
-        url = "你的网站"         #到这申请https://qmsg.zendee.cn/
+        url =  "你的网站"         #到这申请https://qmsg.zendee.cn/
         payload = {'msg': desp}
         headers = {'Cookie': '__cfduid=dad6155270fd20b95dd6965bc30053a8b1600251183'}
         response = requests.request("POST", url, headers=headers, data=payload)
@@ -203,7 +204,7 @@ def do(Authorization, userId):
     dati("4")
     # 试听学习
     stxx()
-    stxx()
+    #stxx()
     # 收藏点赞
     scwz()
     # 阅读
