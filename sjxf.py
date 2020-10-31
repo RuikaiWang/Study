@@ -183,7 +183,7 @@ def do(Authorization, userId):
             desp = '【分值不够，请手动刷分!】今天增加了' + str(todayScore['data']['todayScore']) + '分，总分为' + str(
                 todayScore['data']['yearScore']) + '分'
             print(desp)
-            rizhi()
+            # rizhi()
         else:
             desp = '今天增加了' + str(todayScore['data']['todayScore']) + '分，总分为' + str(
                 todayScore['data']['yearScore']) + '分'
