@@ -7,12 +7,14 @@ import base64
 def do(Authorization, userId):
     def stxx():
         url = "http://221.204.170.88:8184/app/businessScore"
-
+        endtime = int(time.time())
+        starttime = endtime - 35
         payload = {'userId': userId,
-                   'time':'35000',
+                   'time':'35',
                    'type': '2',
                    'articleId':'12',
-                   'ifScore':'1'}
+                   'ifScore':'1',
+                   "appStartTime": starttime}
         headers = {
             'Authorization': Authorization,
             'sUserId': userId,
@@ -133,12 +135,14 @@ def do(Authorization, userId):
 
     def yd():
         url = "http://221.204.170.88:8184/app/businessScore"
-
+        endtime = int(time.time())
+        starttime = endtime - 35
         payload = {'userId': userId,
-                   'time':'35000',
+                   'time':'35',
                    'type': '1',
                    'articleId':articleList[3]["id"],
-                   'ifScore':'1'
+                   'ifScore':'1',
+                   "appStartTime": starttime
                    }
 
         headers = {
@@ -183,7 +187,7 @@ def do(Authorization, userId):
             desp = '【分值不够，请手动刷分!】今天增加了' + str(todayScore['data']['todayScore']) + '分，总分为' + str(
                 todayScore['data']['yearScore']) + '分'
             print(desp)
-            # rizhi()
+            rizhi()
         else:
             desp = '今天增加了' + str(todayScore['data']['todayScore']) + '分，总分为' + str(
                 todayScore['data']['yearScore']) + '分'
@@ -191,7 +195,7 @@ def do(Authorization, userId):
 
     # WXplusher
     def rizhi():
-        url =  "你的网站"         #到这申请https://qmsg.zendee.cn/
+        url =  "https://qmsg.zendee.cn/send/"         #到这申请https://qmsg.zendee.cn/
         payload = {'msg': desp}
         headers = {'Cookie': '__cfduid=dad6155270fd20b95dd6965bc30053a8b1600251183'}
         response = requests.request("POST", url, headers=headers, data=payload)
@@ -233,16 +237,13 @@ def login(username, password):
     userInfo = json.loads(response.text)['data']
     info = json.loads(base64.b64decode(userInfo))
     return [info['jwtToken'], info['id']]
+if __name__ == '__main__':
+    sjxx("username", "password")   # 自己的账号  密码可以自己抓一下登录界面
 
+def main_handler(event, context):
+    return sjxx(username, password)
 
 def sjxx(username, password):
     JWT = login(username, password)
     do('Bearer ' + str(JWT[0]), str(JWT[1]))
 
-
-if __name__ == '__main__':
-    sjxx("username", "password")  #  自己的账号  密码可以自己抓一下登录界面
-
-
-def main_handler(event, context):
-    return sjxx("username", "password")  # 自己的账号  密码可以自己抓一下登录界面
